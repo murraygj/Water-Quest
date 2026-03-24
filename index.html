@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Water Quest | charity: water</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ==================== HEADER (persistent) ==================== -->
+  <header class="header" id="header-home" role="button" tabindex="0">
+    <img src="Jerry Can - CharityWater.svg" alt="Jerry can icon" class="header-logo" width="24" height="24">
+    <span class="header-title">charity: water</span>
+  </header>
+
+  <!-- ==================== DESKTOP LAYOUT WRAPPER ==================== -->
+  <div class="layout">
+
+    <!-- ===== GAME CONTAINER (all screens live here) ===== -->
+    <main class="game-container">
+
+      <!-- ==================== START SCREEN ==================== -->
+      <section id="start-screen" class="screen active">
+        <div class="title-card">
+          <h1 class="game-title"><span class="droplet-emoji">&#x1F4A7;</span> WATER QUEST</h1>
+          <p class="tagline">Help bring clean water to everyone!</p>
+        </div>
+
+        <div class="high-score-pill">High Score: <span id="start-high-score">0</span> pts</div>
+
+        <div class="hero-can">
+          <img src="Jerry Can - CharityWater.svg" alt="Yellow jerry can" class="hero-can-img">
+        </div>
+
+        <div class="instructions">
+          <p>Tap <span class="yellow-text">yellow jerry cans</span> to score!</p>
+          <p><span class="red-text">Avoid dark contaminated cans.</span></p>
+          <p>Choose your challenge. Ready?</p>
+        </div>
+
+        <div class="difficulty-selector">
+          <button class="diff-btn" data-difficulty="easy">EASY</button>
+          <button class="diff-btn active" data-difficulty="normal">NORMAL</button>
+          <button class="diff-btn" data-difficulty="hard">HARD</button>
+        </div>
+        <p class="difficulty-desc" id="difficulty-desc">The standard challenge. 60 seconds, 3 lives.</p>
+
+        <button id="btn-tap-to-play" class="btn btn-primary">TAP TO PLAY</button>
+        <button id="btn-how-to-play" class="btn btn-ghost">HOW TO PLAY</button>
+
+        <div id="how-to-play-overlay" class="how-to-play-overlay hidden">
+          <div class="how-to-play-content">
+            <h2>How To Play</h2>
+            <ul>
+              <li><strong>Tap yellow jerry cans</strong> to score +10 points each.</li>
+              <li><strong>Avoid red contaminated cans</strong> &mdash; tapping one costs a life!</li>
+              <li>You have <strong>3 lives</strong> (shown as water droplets).</li>
+              <li>Yellow cans that expire untapped also cost a life.</li>
+              <li>Hit <strong>3 yellow cans in a row</strong> to activate a <strong>&times;2 combo multiplier</strong>!</li>
+              <li>Reach <strong>50, 100, 200, or 300 pts</strong> to unlock milestone impact facts.</li>
+              <li>Game lasts <strong>60 seconds</strong>. Maximize your score!</li>
+            </ul>
+            <button id="btn-close-how" class="btn btn-primary">GOT IT!</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== GAMEPLAY SCREEN ==================== -->
+      <section id="gameplay-screen" class="screen">
+        <div class="hud">
+          <div class="hud-box hud-score">
+            <span class="hud-label">SCORE</span>
+            <span class="hud-value" id="hud-score-value">0</span>
+          </div>
+          <div class="hud-box hud-time">
+            <span class="hud-label">TIME</span>
+            <span class="hud-value" id="hud-time-value">60s</span>
+          </div>
+        </div>
+
+        <div class="lives-combo-row">
+          <div class="lives" id="lives-display">
+            <span class="life active">&#x1F4A7;</span>
+            <span class="life active">&#x1F4A7;</span>
+            <span class="life active">&#x1F4A7;</span>
+          </div>
+          <div class="combo-badge hidden" id="combo-badge">&times;2</div>
+        </div>
+
+        <div class="feedback-toast" id="feedback-toast"></div>
+
+        <div class="grid" id="game-grid"></div>
+
+        <button id="btn-pause" class="btn btn-ghost">PAUSE</button>
+
+        <div id="pause-overlay" class="pause-overlay hidden">
+          <div class="pause-content">
+            <h2>PAUSED</h2>
+            <button id="btn-resume" class="btn btn-primary">RESUME</button>
+            <button id="btn-pause-home" class="btn btn-ghost">RETURN HOME</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== MILESTONE MODAL ==================== -->
+      <div id="milestone-modal" class="milestone-modal hidden">
+        <div class="milestone-card">
+          <div class="milestone-can">
+            <img src="Jerry Can - CharityWater.svg" alt="Milestone jerry can" class="milestone-can-img">
+          </div>
+          <h2 class="milestone-heading">MILESTONE!</h2>
+          <div class="milestone-threshold" id="milestone-threshold">Reached 100 pts!</div>
+          <p class="milestone-impact" id="milestone-impact"></p>
+          <p class="milestone-resume" id="milestone-resume">Resuming in 2s...</p>
+        </div>
+      </div>
+
+      <!-- ==================== GAME OVER SCREEN ==================== -->
+      <section id="gameover-screen" class="screen">
+        <div class="cause-banner" id="cause-banner">TIME'S UP!</div>
+        <div class="difficulty-badge" id="difficulty-badge">NORMAL</div>
+
+        <div class="final-score-card">
+          <span class="final-score-label">FINAL SCORE:</span>
+          <span class="final-score-value" id="final-score-value">0</span>
+          <span class="best-score" id="best-score">Best: 0 pts</span>
+          <span class="new-record hidden" id="new-record">&#x1F389; NEW RECORD!</span>
+        </div>
+
+        <div class="impact-card" id="impact-card">
+          Your score = 0 months of clean water for one family in Ethiopia.
+        </div>
+
+        <button id="btn-play-again" class="btn btn-primary">PLAY AGAIN</button>
+        <button id="btn-home" class="btn btn-secondary">RETURN HOME</button>
+        <a href="https://www.charitywater.org/donate" target="_blank" rel="noopener noreferrer" class="btn btn-donate">Donate to charity: water</a>
+        <button id="btn-share" class="btn btn-ghost">Share My Score</button>
+      </section>
+
+    </main>
+
+    <!-- ===== SIDEBAR (desktop only, content swaps per screen) ===== -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-panel sidebar-start active" id="sidebar-start">
+        <div class="sidebar-icon">
+          <img src="Jerry Can - CharityWater.svg" alt="Jerry can" width="50" height="50">
+        </div>
+        <h2 class="sidebar-heading">Why Clean Water?</h2>
+        <p class="sidebar-body">785 million people lack basic access to clean drinking water. That's 1 in 10 people on earth.</p>
+        <div class="sidebar-stat">
+          <span class="stat-number">100M+</span>
+          <span class="stat-label">people served by charity: water projects</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-number">29</span>
+          <span class="stat-label">countries with active water projects</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">of public donations fund water projects</span>
+        </div>
+        <p class="sidebar-body sidebar-mission">The yellow jerry can is used globally to carry water. Women and girls walk miles daily carrying these cans. Every tap in this game represents a step toward clean water for all.</p>
+      </div>
+
+      <div class="sidebar-panel sidebar-gameplay" id="sidebar-gameplay">
+        <h2 class="sidebar-heading">Game Stats</h2>
+        <div class="sidebar-live-stat">
+          <span class="stat-label">Impact so far</span>
+          <span class="stat-number" id="sidebar-impact">0 months</span>
+          <span class="stat-sublabel">of clean water earned</span>
+        </div>
+        <div class="sidebar-live-stat">
+          <span class="stat-label">Combo streak</span>
+          <span class="stat-number" id="sidebar-combo">0</span>
+        </div>
+        <div class="sidebar-divider"></div>
+        <h3 class="sidebar-subheading">Quick Tips</h3>
+        <p class="sidebar-body">Hit 3 yellow cans in a row for a x2 combo multiplier. Avoid red cans — they break your streak and cost a life.</p>
+      </div>
+
+      <div class="sidebar-panel sidebar-gameover" id="sidebar-gameover">
+        <h2 class="sidebar-heading">Did You Know?</h2>
+        <p class="sidebar-body">$40 can provide one person with clean water for 10+ years through charity: water projects.</p>
+        <div class="sidebar-divider"></div>
+        <p class="sidebar-body">charity: water operates on a 100% model — every dollar of public donations goes directly to funding clean water projects.</p>
+        <div class="sidebar-divider"></div>
+        <p class="sidebar-body">Since 2006, charity: water has funded over 137,000 water projects across 29 countries, serving more than 100 million people.</p>
+      </div>
+
+    </aside>
+
+  </div><!-- /.layout -->
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <span>💧 Learn more at <a href="https://www.charitywater.org" target="_blank" rel="noopener noreferrer" aria-label="Visit charity: water's website">charitywater.org</a></span>
+      <span class="footer-divider">|</span>
+      <span><a href="https://www.charitywater.org/donate" target="_blank" rel="noopener noreferrer" aria-label="Donate to bring clean water to everyone">Donate to bring clean water to everyone</a></span>
+    </div>
+  </footer>
+
+  <script src="game.js"></script>
+</body>
+</html>
