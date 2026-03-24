@@ -85,6 +85,7 @@ body {
   cursor: pointer;
   border-bottom: 1px solid var(--border-subtle);
   transition: background var(--transition-fast);
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header:hover {
@@ -1068,6 +1069,7 @@ body {
   background: #0D0D0D;
   border-top: 1px solid var(--border-subtle);
   padding: 14px 24px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   text-align: center;
   flex-shrink: 0;
 }
@@ -1445,58 +1447,94 @@ body {
     justify-content: center;
   }
 
-  /* --- Gameplay Screen: constrain grid on real mobile devices ---
-     Real mobile browsers (iOS Safari) compute vh larger than DevTools.
-     Force grid to use width-based sizing, not vh, on mobile.
+  /* --- Gameplay Screen: Real Mobile Viewport Containment ---
+     On real iPhones, Safari's address bar + bottom toolbar steal ~100-140px.
+     Make gameplay a full-height flex column where the grid is the ONLY
+     flexible element. Everything else is fixed/auto height.
   */
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
+  #gameplay-screen {
+    /* Subtract header (52px) + footer (~46px) + breathing room */
+    height: calc(100vh - var(--header-height) - 54px);
+    height: calc(100dvh - var(--header-height) - 54px);
+    max-height: calc(100dvh - var(--header-height) - 54px);
+    overflow: hidden;
+    padding: 6px 12px 4px;
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+
+  /* HUD: fixed size, never flexes */
+  #gameplay-screen .hud {
     gap: 8px;
-    width: 100%;
-    max-width: 100%;
-    padding: 0; /* container already has horizontal padding */
-    margin-bottom: 6px;
+    margin-bottom: 3px;
+    flex-shrink: 0;
   }
 
-  .grid-cell {
-    width: 100%; /* fill grid column, not vh-based */
-    max-width: 120px;
-    max-height: 120px;
-    aspect-ratio: 1; /* SACRED */
-  }
-
-  /* Force fixed sizes on HUD instead of vh-based clamp on mobile */
   #gameplay-screen .hud-value {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   #gameplay-screen .hud-label {
-    font-size: 11px;
+    font-size: 10px;
   }
 
   #gameplay-screen .hud-box {
-    padding: 6px 0;
+    padding: 5px 0;
   }
 
-  #gameplay-screen .hud {
-    gap: 8px;
-    margin-bottom: 4px;
-  }
-
-  #gameplay-screen .feedback-toast {
-    font-size: 13px;
-    padding: 6px 0;
-    min-height: 30px;
-    margin-bottom: 4px;
+  /* Lives row: fixed */
+  #gameplay-screen .lives-combo-row {
+    flex-shrink: 0;
+    margin-bottom: 2px;
   }
 
   #gameplay-screen .lives {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
+  /* Toast: fixed */
+  #gameplay-screen .feedback-toast {
+    font-size: 12px;
+    padding: 4px 0;
+    min-height: 24px;
+    margin-bottom: 3px;
+    flex-shrink: 0;
+  }
+
+  /* GRID: flexible container — gets all remaining space, centers content */
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    /* No grid-template-rows — let aspect-ratio drive row height */
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 12px; /* guaranteed gap between grid and pause button */
+    flex: 1;
+    min-height: 0;
+    align-content: center; /* center grid rows vertically in flex area */
+    justify-content: center;
+    /* Cap grid width so 3 square cells don't overflow vertically.
+       Available height ≈ flex area. If grid is too wide, squares get too tall.
+       Constrain: grid_width ≤ (available_height - gaps) because
+       each row height = grid_width/3, and 3 rows + 2 gaps must fit. */
+    max-width: min(100%, calc((100dvh - var(--header-height) - 200px))); /* rough safety cap */
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .grid-cell {
+    width: 100%;
+    aspect-ratio: 1; /* SQUARE — always */
+    max-width: none;
+    max-height: none;
+    min-height: 0;
+    padding: 12%;
+  }
+
+  /* Pause button: fixed */
   #gameplay-screen .btn {
-    padding: 10px 0;
-    font-size: 14px;
+    padding: 8px 0;
+    font-size: 13px;
+    flex-shrink: 0;
   }
 
   /* --- Footer compact --- */
