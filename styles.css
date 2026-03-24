@@ -140,6 +140,7 @@ body {
   align-items: center;
   width: 100%;
   padding: clamp(8px, 2vh, 20px) 16px clamp(8px, 2vh, 24px);
+  padding: clamp(8px, 2dvh, 20px) 16px clamp(8px, 2dvh, 24px);
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -495,6 +496,7 @@ body {
   display: block;
   font-family: var(--font-body);
   font-size: clamp(10px, 1.5vh, 12px);
+  font-size: clamp(10px, 1.5dvh, 12px);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -505,6 +507,7 @@ body {
   display: block;
   font-family: var(--font-mono);
   font-size: clamp(24px, 4.5vh, 36px);
+  font-size: clamp(24px, 4.5dvh, 36px);
   font-weight: 700;
   line-height: 1.1;
   color: var(--text-primary);
@@ -571,13 +574,16 @@ body {
 .feedback-toast {
   width: 100%;
   padding: clamp(4px, 1vh, 8px) 0;
+  padding: clamp(4px, 1dvh, 8px) 0;
   border-radius: 10px;
   text-align: center;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: clamp(12px, 1.8vh, 14px);
+  font-size: clamp(12px, 1.8dvh, 14px);
   color: var(--text-primary);
   margin-bottom: clamp(2px, 0.5vh, 6px);
+  margin-bottom: clamp(2px, 0.5dvh, 6px);
   transition: opacity 0.3s;
   min-height: clamp(28px, 4vh, 36px);
   opacity: 0;
@@ -605,9 +611,11 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(4px, 1vh, 10px);
+  gap: clamp(4px, 1dvh, 10px); /* dvh override for real mobile */
   width: 100%;
   max-width: 100%;
   margin-bottom: clamp(4px, 1vh, 8px);
+  margin-bottom: clamp(4px, 1dvh, 8px);
   justify-content: center;
 }
 
@@ -1133,6 +1141,7 @@ body {
 
   .grid {
     grid-template-columns: repeat(4, clamp(45px, 9vh, 90px));
+    grid-template-columns: repeat(4, clamp(45px, 9dvh, 90px));
     justify-content: center;
   }
 
@@ -1290,6 +1299,7 @@ body {
 @media (min-width: 768px) and (max-width: 900px) {
   .grid {
     grid-template-columns: repeat(4, clamp(45px, 10vh, 105px));
+    grid-template-columns: repeat(4, clamp(45px, 10dvh, 105px));
     justify-content: center;
   }
 
@@ -1433,6 +1443,60 @@ body {
     padding-bottom: 12px;
     flex: 1;
     justify-content: center;
+  }
+
+  /* --- Gameplay Screen: constrain grid on real mobile devices ---
+     Real mobile browsers (iOS Safari) compute vh larger than DevTools.
+     Force grid to use width-based sizing, not vh, on mobile.
+  */
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0; /* container already has horizontal padding */
+    margin-bottom: 6px;
+  }
+
+  .grid-cell {
+    width: 100%; /* fill grid column, not vh-based */
+    max-width: 120px;
+    max-height: 120px;
+    aspect-ratio: 1; /* SACRED */
+  }
+
+  /* Force fixed sizes on HUD instead of vh-based clamp on mobile */
+  #gameplay-screen .hud-value {
+    font-size: 28px;
+  }
+
+  #gameplay-screen .hud-label {
+    font-size: 11px;
+  }
+
+  #gameplay-screen .hud-box {
+    padding: 6px 0;
+  }
+
+  #gameplay-screen .hud {
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  #gameplay-screen .feedback-toast {
+    font-size: 13px;
+    padding: 6px 0;
+    min-height: 30px;
+    margin-bottom: 4px;
+  }
+
+  #gameplay-screen .lives {
+    font-size: 1.2rem;
+  }
+
+  #gameplay-screen .btn {
+    padding: 10px 0;
+    font-size: 14px;
   }
 
   /* --- Footer compact --- */
