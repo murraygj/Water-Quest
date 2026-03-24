@@ -71,8 +71,8 @@ body {
 /* ----- Persistent Header ----- */
 .header {
   width: 100%;
-  height: var(--header-height);
-  min-height: var(--header-height);
+  height: calc(var(--header-height) + env(safe-area-inset-top, 0px));
+  min-height: calc(var(--header-height) + env(safe-area-inset-top, 0px));
   flex-shrink: 0;
   background: #000000;
   display: flex;
@@ -633,7 +633,7 @@ body {
   position: relative;
   -webkit-user-select: none;
   user-select: none;
-  padding: 15%;
+  padding: 20%;
 }
 
 .grid-cell svg,
@@ -1453,12 +1453,12 @@ body {
      flexible element. Everything else is fixed/auto height.
   */
   #gameplay-screen {
-    /* Subtract header (52px) + footer (~46px) + breathing room */
-    height: calc(100vh - var(--header-height) - 54px);
-    height: calc(100dvh - var(--header-height) - 54px);
-    max-height: calc(100dvh - var(--header-height) - 54px);
+    /* Subtract header + footer + safe area insets (notch + home indicator) */
+    height: calc(100vh - var(--header-height) - 54px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    height: calc(100dvh - var(--header-height) - 54px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - var(--header-height) - 54px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     overflow: hidden;
-    padding: 6px 12px 4px;
+    padding: 6px 12px calc(4px + env(safe-area-inset-bottom, 0px));
     justify-content: flex-start;
     box-sizing: border-box;
   }
@@ -1527,7 +1527,7 @@ body {
     max-width: none;
     max-height: none;
     min-height: 0;
-    padding: 12%;
+    padding: 18%;
   }
 
   /* Pause button: fixed */
